@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Depends
-from .dto.user_base_dto import UserBaseDto
-from .dto.user_dto import UserDto
+from typing import List
+
+from .dto.response_user_dto import ResponseUserDto
 from .dto.create_user_dto import CreateUserDto
 from .service import UsersService
-from typing import List
+
 
 
 router = APIRouter(
@@ -12,17 +13,17 @@ router = APIRouter(
 )
 
 @router.get("/all")
-def get_all_users(usersService: UsersService = Depends()) -> List[UserDto]:
+def get_all_users(usersService: UsersService = Depends()) -> List[ResponseUserDto]:
     return usersService.getAll()
     
-@router.get("/{user_id}", response_model = UserDto)
-def get_user(user_id: int, usersService: UsersService = Depends()) -> UserDto:
+@router.get("/{user_id}", response_model = ResponseUserDto)
+def get_user(user_id: int, usersService: UsersService = Depends()) -> ResponseUserDto:
     return usersService.getUser(user_id)
 
 @router.post("/create")
-def create_user(user: CreateUserDto, usersService: UsersService = Depends()) -> CreateUserDto:
+def create_user(user: CreateUserDto, usersService: UsersService = Depends()) -> ResponseUserDto:
     return usersService.createUser(user)
 
 @router.delete("/delete/{user_id}")
-def delete_user(user_id: int ,userService: UsersService = Depends()) -> UserBaseDto:
+def delete_user(user_id: int, userService: UsersService = Depends()) -> ResponseUserDto:
     return userService.deleteUser(user_id)

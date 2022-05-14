@@ -1,4 +1,5 @@
 import uvicorn
+
 from src.config import config
 
 
