@@ -1,6 +1,6 @@
-from .user_dto import UserDto
+from .user_base_dto import UserBaseDto
 
-class CreateUserDto(UserDto):
-    password_hash: str
+class CreateUserDto(UserBaseDto):
+    password: str
 
     

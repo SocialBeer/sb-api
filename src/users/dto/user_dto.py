@@ -1,8 +1,4 @@
-from pydantic import BaseModel
+from .user_base_dto import UserBaseDto
 
-class UserDto(BaseModel):
-    username: str
-
-    class Config:
-        orm_mode = True
-
+class UserDto(UserBaseDto):
+    id: int

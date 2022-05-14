@@ -30,21 +30,22 @@ class AuthService:
         return check_password_hash(password_hash, password)
 
     @classmethod
-    def encodeTokens(cls, user: AuthDto) -> str:
+    def encodeTokens(cls, username: str) -> str:
         data = {
             'sender': 'SocialBeer',
             'created_at': str(datetime.datetime.now()),
-            'user': user.username,
+            'user': username,
         }
         
         access_data = data
         refresh_data = data
         
-        access_data['exp'] = str(datetime.datetime.now() + config.access_token_time)
-        access_data['exp'] = str()
+        access_data['exp'] = datetime.datetime.now() + config.access_token_time
+        refresh_data['exp'] = datetime.datetime.now() + config.refresh_token_time
+
         return {
-            'access_token': jwt.encode(payload = json_data, key = config.secret_access_token_key, algorithm="HS256"),
-            'refresh_token': jwt.encode(payload = json_data, key = config.secret_refresh_token_key, algorithm="HS256"),
+            'access_token': jwt.encode(payload = access_data, key = config.secret_access_token_key, algorithm="HS256"),
+            'refresh_token': jwt.encode(payload = refresh_data, key = config.secret_refresh_token_key, algorithm="HS256"),
         } 
     
     
@@ -66,7 +67,7 @@ class AuthService:
         if not user or not self.checkPasswordHash(authDto.password, user.password_hash):
             raise HTTPException(status_code = status.HTTP_401_UNAUTHORIZED)
         
-        return self.encodeTokens(AuthDto(username = user.username, password = user.password_hash))
+        return self.encodeTokens(user.username)
 
 
     def registerUser(self, authDto: AuthDto):
@@ -82,10 +83,7 @@ class AuthService:
             self.session.rollback()
             raise HTTPException(status_code=status.HTTP_409_CONFLICT)
         
-        return self.encodeTokens(AuthDto(
-            username = user.username, 
-            password = user.password_hash
-        ))
+        return self.encodeTokens(user.username)
     
 
     def refreshToken(self, refresh_token: str) -> str:
@@ -95,16 +93,6 @@ class AuthService:
             print(f"token is invalid {e}")
             raise HTTPException(status_code = status.HTTP_403_FORBIDDEN)
         
-        json_data = {
-            'sender': 'SocialBeer',
-            'date': str(datetime.datetime.now()),
-            'user': data['user'],
-            'password_hash': data['password_hash']
-        }
-
-        return {
-            'access_token': jwt.encode(payload = json_data, key = config.secret_access_token_key, algorithm="HS256"),
-            'refresh_token': jwt.encode(payload = json_data, key = config.secret_refresh_token_key, algorithm="HS256"),
-        } 
+        return self.encodeTokens(data['user'])
         
         
