@@ -1,5 +1,5 @@
 import sqlalchemy as db
-from ..models import Base
+from ..database import Base
 
 
 class UserModel(Base):
@@ -8,5 +8,3 @@ class UserModel(Base):
     id = db.Column(db.Integer, primary_key = True)
     username = db.Column(db.String(50), unique = True)
     password_hash = db.Column(db.String(128))
-
-

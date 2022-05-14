@@ -1,6 +1,10 @@
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 from .config import config
+from sqlalchemy.orm import declarative_base
+
+
+Base = declarative_base()
 
 engine = create_engine(
     config.db_url,
@@ -18,5 +22,3 @@ def get_session() -> Session:
         print(e)
     finally:
         session.close()
-
-# get user/ auth and reg
