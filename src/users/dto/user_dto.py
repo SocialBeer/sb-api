@@ -1,5 +1,5 @@
-from .user_base_dto import UserBaseDto
+from .response_user_dto import ResponseUserDto
 
 
-class UserDto(UserBaseDto):
-    id: int
+class UserDto(ResponseUserDto):
+    password: str

@@ -1,9 +1,10 @@
+from werkzeug.security import generate_password_hash, check_password_hash
 from fastapi import Depends, security, HTTPException, status
 from sqlalchemy.orm import Session
-from ..database import get_session
-from werkzeug.security import generate_password_hash, check_password_hash
 import datetime
 import jwt
+
+from ..database import get_session
 from .dto.token_dto import TokenDto
 from .dto.auth_dto import AuthDto
 from ..config import config

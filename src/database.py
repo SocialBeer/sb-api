@@ -18,6 +18,7 @@ Session = sessionmaker(
 
 def get_session() -> Session:
     session = Session()
+    
     try:
         yield session
     except Exception as e:
