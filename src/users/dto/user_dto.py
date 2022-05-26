@@ -1,8 +1,5 @@
-from pydantic import BaseModel
+from .response_user_dto import ResponseUserDto
 
-class UserDto(BaseModel):
-    username: str
 
-    class Config:
-        orm_mode = True
-
+class UserDto(ResponseUserDto):
+    password: str
