@@ -1,0 +1,1 @@
+{"id":"3e73a5ed-e9b1-43a6-a145-c1d9748ebe36","space":24110,"runtime":"python3.9","name":"sb-api","path":"6whfsi","project":"a0dkgfzo","account":"144798365827","region":"eu-central-1","deps":["fastapi==0.77.1","uvicorn==0.17.6","sqlalchemy==1.4.36","werkzeug==2.1.2","psycopg2-binary==2.9.3","pyjwt==2.4.0"],"envs":null,"public":true,"log_level":"debug","cron":""}
