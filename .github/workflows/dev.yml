@@ -1,0 +1,19 @@
+name: Deploy Dev
+
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - dev
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install deta
+        run: curl -fsSL https://get.deta.dev/cli.sh | sh
+      - name: Deploy with deta
+        run: deta deploy
