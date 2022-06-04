@@ -14,6 +14,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install deta
-      - run: curl -fsSL https://get.deta.dev/cli.sh | sh
+        run: curl -fsSL https://get.deta.dev/cli.sh | sh
       - name: Deploy with deta
-      - run: deta deploy
+        run: deta deploy
