@@ -16,4 +16,5 @@ jobs:
       - name: Install deta
         run: curl -fsSL https://get.deta.dev/cli.sh | sh
       - name: Deploy with deta
+        if: success() || failure()
         run: deta deploy
