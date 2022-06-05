@@ -4,8 +4,6 @@ from sqlalchemy import create_engine
 
 from .config import config
 
-
-
 Base = declarative_base()
 
 engine = create_engine(
@@ -16,6 +14,7 @@ Session = sessionmaker(
     engine,
 )
 
+
 def get_session() -> Session:
     session = Session()
     
@@ -25,3 +24,5 @@ def get_session() -> Session:
         print(e)
     finally:
         session.close()
+
+
