@@ -5,7 +5,6 @@ from sqlalchemy import create_engine
 from .config import config
 
 
-
 Base = declarative_base()
 
 engine = create_engine(

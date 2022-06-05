@@ -6,14 +6,15 @@ import jwt
 
 from ..database import get_session
 from .dto.token_dto import TokenDto
-from .dto.auth_dto import AuthDto
+from .dto.login_dto import LoginDto
+from .dto.register_dto import RegisterDto
 from ..config import config
 from ..users.model import UserModel
 
 
 oauth2_scheme = security.OAuth2PasswordBearer(tokenUrl="/users/auth")
 
-def get_current_user(token: str = Depends(oauth2_scheme)) -> AuthDto:
+def get_current_user(token: str = Depends(oauth2_scheme)) -> LoginDto:
     return AuthService.decodeToken(token)
     
 class AuthService:
@@ -21,11 +22,11 @@ class AuthService:
         self.session = session
     
     @staticmethod
-    def encodeTokens(username: str) -> TokenDto:
+    def encodeTokens(email: str) -> TokenDto:
         data = {
             'sender': 'SocialBeer',
             'created_at': str(datetime.datetime.now()),
-            'user': username,
+            'email': email,
         }
         
         access_data = refresh_data = data
@@ -39,28 +40,31 @@ class AuthService:
         )
     
     @staticmethod
-    def decodeToken(token: str) -> AuthDto:
+    def decodeToken(token: str) -> LoginDto:
         try:
             data = jwt.decode(jwt = token, key = config.secret_access_token_key, algorithms="HS256")
         except Exception as e:
             print(f"token is invalid {e}")
 
-        user = AuthDto(username = data['user'], password_hash = data['password_hash'])   
+        user = LoginDto(email = data['email'], password_hash = data['password_hash'])   
 
         return user         
 
-    def loginUser(self, authDto: AuthDto) -> TokenDto:
-        user: UserModel = self.session.query(UserModel).filter_by(username = authDto.username).first()
+    def loginUser(self, loginDto: LoginDto) -> TokenDto:
+        user: UserModel = self.session.query(UserModel).filter_by(email = loginDto.email).first()
 
-        if not user or not check_password_hash(user.password_hash, authDto.password):
+        if not user or not check_password_hash(user.password_hash, loginDto.password):
             raise HTTPException(status_code = status.HTTP_401_UNAUTHORIZED)
         
-        return self.encodeTokens(user.username)
+        return self.encodeTokens(user.email)
 
-    def registerUser(self, authDto: AuthDto) -> TokenDto:
+    def registerUser(self, registerDto: RegisterDto) -> TokenDto:
         user = UserModel(
-            username = authDto.username,
-            password_hash = generate_password_hash(authDto.password)
+            email = registerDto.email,
+            first_name = registerDto.first_name,
+            last_name = registerDto.last_name,
+            country = registerDto.country,
+            password_hash = generate_password_hash(registerDto.password)
         )
 
         try:
@@ -70,7 +74,7 @@ class AuthService:
             self.session.rollback()
             raise HTTPException(status_code=status.HTTP_409_CONFLICT)
         
-        return self.encodeTokens(user.username)
+        return self.encodeTokens(user.email)
     
     def refreshToken(self, refresh_token: str) -> TokenDto:
         try:
@@ -79,6 +83,6 @@ class AuthService:
             print(f"token is invalid {e}")
             raise HTTPException(status_code = status.HTTP_403_FORBIDDEN)
         
-        return self.encodeTokens(data['user'])
+        return self.encodeTokens(data['email'])
         
         

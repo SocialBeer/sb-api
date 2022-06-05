@@ -6,7 +6,6 @@ from .dto.create_user_dto import CreateUserDto
 from .service import UsersService
 
 
-
 router = APIRouter(
     tags = ['Users Controller'],
     prefix = '/users'

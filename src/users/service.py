@@ -9,7 +9,6 @@ from .dto.create_user_dto import CreateUserDto
 from .model import UserModel
 
 
-
 class UsersService:
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
@@ -24,12 +23,14 @@ class UsersService:
 
     def getUser(self, id: int) -> ResponseUserDto:
         user = self._findUser(id)
-        
-        return ResponseUserDto(id = user.id, username = user.username)
+        return ResponseUserDto(**user.__dict__)
 
     def createUser(self, createUserDto: CreateUserDto) -> ResponseUserDto: 
         user = UserModel(
-            username = createUserDto.username, 
+            first_name = createUserDto.first_name, 
+            last_name = createUserDto.last_name,
+            email = createUserDto.email,
+            country = createUserDto.country,
             password_hash = generate_password_hash(createUserDto.password)
         )
 
@@ -39,7 +40,7 @@ class UsersService:
         except:
             self.session.rollback()
             
-        return ResponseUserDto(id = user.id, username = user.username)
+        return ResponseUserDto(**user)
     
     def deleteUser(self, id: int) -> ResponseUserDto:
         user = self._findUser(id)
@@ -50,7 +51,7 @@ class UsersService:
         except:
             self.session.rollback()
 
-        return ResponseUserDto(id = user.id, username = user.username)
+        return ResponseUserDto(**user.__dict__)
 
     def getAll(self) -> List[ResponseUserDto]:
-        return self.session.query(UserModel).all()
+        return list(map(lambda x: ResponseUserDto(**x.__dict__), self.session.query(UserModel).all()))
