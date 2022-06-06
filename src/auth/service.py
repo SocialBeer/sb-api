@@ -46,7 +46,7 @@ class AuthService:
         except Exception as e:
             print(f"token is invalid {e}")
 
-        user = LoginDto(email = data['email'], password_hash = data['password_hash'])   
+        user = LoginDto(email = data['email'], password = data['password_hash'])   
 
         return user         
 

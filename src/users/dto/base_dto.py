@@ -1,8 +1,12 @@
-from pydantic import Field, Required
+from pydantic import BaseModel, Required, Field
 
-from .login_dto import LoginDto
 
-class RegisterDto(LoginDto):
+class BaseDto(BaseModel):
+    email: str = Field(
+        default = Required, 
+        regex = "^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$", 
+        example = "name@mail.com"
+    )
     first_name: str = Field(
         default = Required, 
         min_length = 3,

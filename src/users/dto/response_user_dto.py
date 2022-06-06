@@ -1,12 +1,5 @@
-from pydantic import BaseModel
-from typing import Any
-
-from ..model import UserModel
+from .base_dto import BaseDto
 
 
-class ResponseUserDto(BaseModel):
+class ResponseUserDto(BaseDto):
     id: int
-    email: str
-    first_name: str
-    last_name: str
-    country: str
