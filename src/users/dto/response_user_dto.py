@@ -1,5 +1,5 @@
-from .base_dto import BaseDto
+from src.base.dto.base_dto import UserEmailField, UserInformationFields
 
 
-class ResponseUserDto(BaseDto):
+class ResponseUserDto(UserEmailField, UserInformationFields):
     id: int
