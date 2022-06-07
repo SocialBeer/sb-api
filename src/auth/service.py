@@ -2,7 +2,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from fastapi import Depends, security, HTTPException, status
 from sqlalchemy.orm import Session
 import datetime
+from .dto.register_metadata_dto import RegisterMetaData
 import jwt
+import json
 
 from ..database import get_session
 from .dto.token_dto import TokenDto
@@ -84,5 +86,12 @@ class AuthService:
             raise HTTPException(status_code = status.HTTP_403_FORBIDDEN)
         
         return self.encodeTokens(data['email'])
+
+    def getMetadata(self) -> RegisterMetaData:
+        with open("src/assets/countries.json") as json_file:
+            json_data = json.load(json_file)
+            
+        return RegisterMetaData(countries = json_data)
+
         
         

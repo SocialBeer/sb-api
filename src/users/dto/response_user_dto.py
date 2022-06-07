@@ -1,5 +1,9 @@
-from src.base.dto.base_dto import UserEmailField, UserInformationFields
+from pydantic import BaseModel
 
 
-class ResponseUserDto(UserEmailField, UserInformationFields):
+class ResponseUserDto(BaseModel):
     id: int
+    first_name: str
+    last_name: str
+    email: str
+    country: str

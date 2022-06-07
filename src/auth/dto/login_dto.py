@@ -1,5 +1,8 @@
-from src.base.dto.base_dto import UserPasswordField, UserEmailField
+from pydantic import BaseModel
+
+from src.base.validation import user_validation 
 
 
-class LoginDto(UserPasswordField, UserEmailField):
-    pass
+class LoginDto(BaseModel):
+    email: str
+    password: str
