@@ -1,8 +1,6 @@
 import json
-from typing import Union
 from fastapi import HTTPException, status
 
-from src.auth.dto.register_dto import RegisterDto
 from src.users.dto.create_user_dto import CreateUserDto
 
 
