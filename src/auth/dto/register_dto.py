@@ -1,6 +1,11 @@
-from .login_dto import LoginDto
+from pydantic import BaseModel
 
-class RegisterDto(LoginDto):
-    first_name: str
-    last_name: str
-    country: str 
+from src.base.validation import user_validation
+
+
+class RegisterDto(BaseModel):
+    first_name: str = user_validation.first_name_field
+    last_name: str = user_validation.last_name_field
+    email: str = user_validation.email_field
+    password: str = user_validation.password_field
+    country: str = user_validation.country_field

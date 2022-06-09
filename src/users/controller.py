@@ -4,6 +4,7 @@ from typing import List
 from .dto.response_user_dto import ResponseUserDto
 from .dto.create_user_dto import CreateUserDto
 from .service import UsersService
+from src.base.helpers.country_check import country_check
 
 
 router = APIRouter(
@@ -20,7 +21,7 @@ def get_user(user_id: int, usersService: UsersService = Depends()) -> ResponseUs
     return usersService.getUser(user_id)
 
 @router.post("/create")
-def create_user(user: CreateUserDto, usersService: UsersService = Depends()) -> ResponseUserDto:
+def create_user(user: CreateUserDto = Depends(country_check), usersService: UsersService = Depends()) -> ResponseUserDto:
     return usersService.createUser(user)
 
 @router.delete("/delete/{user_id}")
