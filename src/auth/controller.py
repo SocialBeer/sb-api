@@ -18,7 +18,7 @@ def login_user(user: LoginDto, authService: AuthService = Depends()) -> TokenDto
     return authService.loginUser(user)
 
 @router.post("/registration")
-def register_user(authService: AuthService = Depends(), user = Depends(country_check)) -> TokenDto:
+def register_user(user: RegisterDto = Depends(country_check), authService: AuthService = Depends()) -> TokenDto:
     return authService.registerUser(user)
 
 @router.post("/refresh-token/{refresh_token}")

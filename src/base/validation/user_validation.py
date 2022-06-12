@@ -1,40 +1,40 @@
-from pydantic import Field, Required
+from fastapi import HTTPException, status
+from pydantic import BaseModel, validator
+import re
+ 
 
+class BaseValidation(BaseModel):
 
-password_field = Field(
-    default = Required, 
-    min_length = 6, 
-    example = "password",
-    regex = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{6,20})",
-    description = "password should have at least one number, one lowercase and one uppercase"
-) 
+    @classmethod
+    def __validation_function(cls, value: str, regx: str, min: int, max: int, error_msg: str):
+        if re.match(regx, value) is None or len(value) < min or len(value) > max:
+            raise HTTPException(status_code = status.HTTP_422_UNPROCESSABLE_ENTITY, detail = {'msg': error_msg})
+        
+        return value
+    
+    @validator('first_name', 'last_name', 'country', check_fields = False)
+    def information_fields_validation(cls, field: str):
+        return cls.__validation_function(
+            field, 
+            "^[a-zA-Z]+$", 
+            3, 20, 
+            "validation error"
+        )
+    
+    @validator('password', check_fields = False)
+    def password_validation(cls, password: str):
+        return cls.__validation_function(
+            password, 
+            "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{6,20})", 
+            6, 20, 
+            "password validation error"
+        )
 
-email_field: str = Field(
-    default = Required, 
-    regex = "^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$", 
-    example = "name@mail.com"
-)
-
-first_name_field: str = Field(
-    default = Required, 
-    min_length = 3,
-    max_length = 20,
-    regex = "^[a-zA-Z]+$", 
-    example = "Ivan"
-)
-
-last_name_field: str = Field(
-    default = Required, 
-    min_length = 3,
-    max_length = 20,
-    regex = "^[a-zA-Z]+$", 
-    example = "Ivanov"
-)
-
-country_field: str = Field(
-    default = Required, 
-    min_length = 3,
-    max_length = 20,
-    regex = "^[a-zA-Z]+$", 
-    example = "Poland"
-)
+    @validator('email', check_fields = False)
+    def email_validation(cls, email: str):
+        return cls.__validation_function(
+            email, 
+            "^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$", 
+            6, 20, 
+            "email validation error"
+        )
